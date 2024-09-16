@@ -1,0 +1,22 @@
+{
+  "name": "caseapp",
+  "version": "1.0.0",
+  "description": "Cases Program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Jerson Kyle Bonifacio",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "caseapp": "file:",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
