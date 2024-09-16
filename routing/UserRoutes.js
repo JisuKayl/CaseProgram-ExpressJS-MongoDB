@@ -2,35 +2,18 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userdata");
 
-// Get All User
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Get User by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const userItem = await User.findById(req.params.id);
-    if (!userItem) return res.status(404).json({ message: "User not found" });
-    res.status(200).json(userItem);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Create a User
-router.post("/", async (req, res) => {
+// Register a User
+router.post("/signup", async (req, res) => {
   const userItem = new User({
-    userFirstName: req.body.userFirstName,
-    userLastName: req.body.userLastName,
-    userName: req.body.userName,
-    userEmail: req.body.userEmail,
-    userPassword: req.body.userPassword,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    age: req.body.age,
+    contactNum: req.body.contactNum,
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    userRole: req.body.userRole,
+    createdAt: new Date(),
   });
 
   try {
@@ -42,18 +25,72 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Login a User
+router.post("/signin", async (req, res) => {
+  const { email, password, userRole } = req.body;
+  try {
+    const userExist = await User.findOne({ email, password });
+    if (userExist) {
+      return userExist.userRole == "Admin"
+        ? res
+            .status(200)
+            .json([
+              "WELCOME TO ADMIN PAGE",
+              `Good day, ${userExist.firstName} ${userExist.lastName}`,
+              userExist,
+            ])
+        : res
+            .status(200)
+            .json([
+              "WELCOME TO USER PAGE",
+              `Good day, ${userExist.firstName} ${userExist.lastName}`,
+              userExist,
+            ]);
+    } else {
+      res.status(404).json("User account not found");
+    }
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Get All Users
+router.get("/user", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get User by ID
+router.get("/user/:id", async (req, res) => {
+  try {
+    const userItem = await User.findById(req.params.id);
+    if (!userItem) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(userItem);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Update User by ID
-router.put("/:id/", async (req, res) => {
+router.put("/user/:id/", async (req, res) => {
   try {
     const userItem = await User.findById(req.params.id);
     if (!userItem) return res.status(404).json({ message: "User not found" });
 
     // Update fields
-    userItem.userFirstName = req.body.userFirstName || userItem.userFirstName;
-    userItem.userLastName = req.body.userFirstName || userItem.userLastName;
-    userItem.userName = req.body.userFirstName || userItem.userName;
-    userItem.userEmail = req.body.userFirstName || userItem.userEmail;
-    userItem.userPassword = req.body.userFirstName || userItem.userPassword;
+    userItem.firstName = req.body.firstName || userItem.firstName;
+    userItem.lastName = req.body.lastName || userItem.lastName;
+    userItem.age = req.body.age || userItem.age;
+    userItem.contactNum = req.body.contactNum || userItem.contactNum;
+    userItem.username = req.body.username || userItem.username;
+    userItem.email = req.body.email || userItem.email;
+    userItem.password = req.body.password || userItem.password;
+    userItem.userRole = req.body.userRole || userItem.userRole;
+    userItem.updatedAt = new Date();
 
     const updatedUser = await userItem.save();
     res.status(200).json(updatedUser);
@@ -63,7 +100,7 @@ router.put("/:id/", async (req, res) => {
 });
 
 // Delete User by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/user/:id", async (req, res) => {
   try {
     const userItem = await User.findById(req.params.id);
     if (!userItem) return res.status(404).json({ message: "User not found" });
@@ -76,7 +113,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Delete All Users
-router.delete("/", async (req, res) => {
+router.delete("/user", async (req, res) => {
   try {
     await User.deleteMany();
     res.status(200).json({ message: "All users deleted successfully" });

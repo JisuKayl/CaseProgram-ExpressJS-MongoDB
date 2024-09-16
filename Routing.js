@@ -7,6 +7,6 @@ const hearingRoutes = require("./routing/hearingRoutes.js");
 
 router.use("/case", caseRoutes);
 router.use("/hearing", hearingRoutes);
-router.use("/user", userRoutes);
+router.use("/", userRoutes);
 
 module.exports = router;
