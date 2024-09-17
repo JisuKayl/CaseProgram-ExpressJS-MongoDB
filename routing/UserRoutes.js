@@ -88,7 +88,6 @@ async function auth(req, res, next) {
     const token = req.headers.authorization.replace("Bearer ", "");
     await jwt.verify(token, JWT_SECRET);
     req.token = token;
-    const decodedToken = jwt.decode(token);
 
     next();
   } catch (err) {
