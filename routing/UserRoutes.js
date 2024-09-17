@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userdata");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Register a User
 router.post("/signup", async (req, res) => {
@@ -36,6 +39,11 @@ router.post("/login", async (req, res) => {
 
   try {
     const userExist = await User.findOne({ email });
+    const token = jwt.sign(
+      { email: userExist.email, userRole: userExist.userRole },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
     const passwordMatch = await bcrypt.compare(password, userExist.password);
     if (!passwordMatch)
       return res.status(404).json({ message: "User not found" });
@@ -46,6 +54,7 @@ router.post("/login", async (req, res) => {
             "WELCOME TO ADMIN PAGE",
             `Good day, ${userExist.firstName} ${userExist.lastName}`,
             userExist,
+            { token },
           ])
       : res
           .status(200)
@@ -53,6 +62,7 @@ router.post("/login", async (req, res) => {
             "WELCOME TO USER PAGE",
             `Good day, ${userExist.firstName} ${userExist.lastName}`,
             userExist,
+            { token },
           ]);
   } catch (err) {
     res.status(404).json({ message: "User not found" });
@@ -60,7 +70,7 @@ router.post("/login", async (req, res) => {
 });
 
 // Get All Users
-router.get("/user", async (req, res) => {
+router.get("/user", auth, async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
@@ -68,6 +78,17 @@ router.get("/user", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+async function auth(req, res, next) {
+  try {
+    const token = req.headers.authorization.replace("Bearer ", "");
+    await jwt.verify(token, "super-secret");
+    req.token = token;
+    next();
+  } catch (err) {
+    res.status(401).json({ message: err.message });
+  }
+}
 
 // Get User by ID
 router.get("/user/:id", async (req, res) => {
