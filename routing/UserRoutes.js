@@ -40,7 +40,11 @@ router.post("/login", async (req, res) => {
   try {
     const userExist = await User.findOne({ email });
     const token = jwt.sign(
-      { email: userExist.email, userRole: userExist.userRole },
+      {
+        id: userExist._id,
+        email: userExist.email,
+        userRole: userExist.userRole,
+      },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -82,13 +86,27 @@ router.get("/user", auth, async (req, res) => {
 async function auth(req, res, next) {
   try {
     const token = req.headers.authorization.replace("Bearer ", "");
-    await jwt.verify(token, "super-secret");
+    await jwt.verify(token, JWT_SECRET);
     req.token = token;
+    const decodedToken = jwt.decode(token);
+
     next();
   } catch (err) {
     res.status(401).json({ message: err.message });
   }
 }
+
+router.get("/userTokenData", (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.decode(token);
+    return decodedToken == null
+      ? res.status(404).json("Token not found")
+      : res.status(200).json({ originalToken: token, decodedToken });
+  } catch (err) {
+    res.status(400).json({ message: message.err });
+  }
+});
 
 // Get User by ID
 router.get("/user/:id", async (req, res) => {

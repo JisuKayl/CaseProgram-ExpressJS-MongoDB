@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
-    // _id: mongoose.Schema.ObjectId,
-    // id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: false,
-    // },
     firstName: {
       type: String,
       required: [true, "Please enter your first name."],

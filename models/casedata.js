@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const caseSchema = mongoose.Schema({
-  // _id: mongoose.Schema.ObjectId,
-  // id: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   required: false,
-  // },
   fileNumber: {
     type: String,
     required: true,

@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const hearingSchema = mongoose.Schema({
-  // _id: mongoose.Schema.ObjectId,
-  // id: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   required: false,
-  // },
   hearingName: {
     type: String,
     required: true,
