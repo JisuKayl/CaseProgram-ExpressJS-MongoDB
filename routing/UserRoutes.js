@@ -37,7 +37,8 @@ router.post("/login", async (req, res) => {
   try {
     const userExist = await User.findOne({ email });
     const passwordMatch = await bcrypt.compare(password, userExist.password);
-    if (!passwordMatch) return res.status(400).json({ message: err.message });
+    if (!passwordMatch)
+      return res.status(404).json({ message: "User not found" });
     return userExist.userRole == "Admin"
       ? res
           .status(200)
@@ -54,7 +55,7 @@ router.post("/login", async (req, res) => {
             userExist,
           ]);
   } catch (err) {
-    res.status(404).json("User not found");
+    res.status(404).json({ message: "User not found" });
   }
 });
 
