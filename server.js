@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const routes = require("./Routing.js");
 const db = require("./DbCon.js");
-const port = 3000;
+require("dotenv").config();
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(routes);

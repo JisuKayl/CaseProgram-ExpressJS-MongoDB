@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userdata");
+const bcrypt = require("bcrypt");
 
 // Register a User
 router.post("/signup", async (req, res) => {
+  const { password } = req.body;
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   const userItem = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -11,7 +16,7 @@ router.post("/signup", async (req, res) => {
     contactNum: req.body.contactNum,
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPassword,
     userRole: req.body.userRole,
     createdAt: new Date(),
   });
@@ -25,12 +30,14 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// Login a User
-router.post("/signin", async (req, res) => {
-  const { email, password, userRole } = req.body;
+// Sign-in a User
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const userExist = await User.findOne({ email, password });
-    if (userExist) {
+    const userExist = await User.findOne({ email });
+    const passwordMatch = await bcrypt.compare(password, userExist.password);
+    if (passwordMatch) {
       return userExist.userRole == "Admin"
         ? res
             .status(200)
@@ -79,6 +86,9 @@ router.get("/user/:id", async (req, res) => {
 router.put("/user/:id/", async (req, res) => {
   try {
     const userItem = await User.findById(req.params.id);
+    const { password } = req.body;
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     if (!userItem) return res.status(404).json({ message: "User not found" });
 
     // Update fields
@@ -88,7 +98,7 @@ router.put("/user/:id/", async (req, res) => {
     userItem.contactNum = req.body.contactNum || userItem.contactNum;
     userItem.username = req.body.username || userItem.username;
     userItem.email = req.body.email || userItem.email;
-    userItem.password = req.body.password || userItem.password;
+    userItem.password = hashedPassword;
     userItem.userRole = req.body.userRole || userItem.userRole;
     userItem.updatedAt = new Date();
 
