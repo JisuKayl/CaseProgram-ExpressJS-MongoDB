@@ -104,7 +104,7 @@ router.get("/userTokenData", (req, res) => {
       ? res.status(404).json("Token not found")
       : res.status(200).json({ originalToken: token, decodedToken });
   } catch (err) {
-    res.status(400).json({ message: message.err });
+    res.status(400).json("Error 400: Bad request");
   }
 });
 
