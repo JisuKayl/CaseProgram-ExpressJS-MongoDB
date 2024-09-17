@@ -37,27 +37,24 @@ router.post("/login", async (req, res) => {
   try {
     const userExist = await User.findOne({ email });
     const passwordMatch = await bcrypt.compare(password, userExist.password);
-    if (passwordMatch) {
-      return userExist.userRole == "Admin"
-        ? res
-            .status(200)
-            .json([
-              "WELCOME TO ADMIN PAGE",
-              `Good day, ${userExist.firstName} ${userExist.lastName}`,
-              userExist,
-            ])
-        : res
-            .status(200)
-            .json([
-              "WELCOME TO USER PAGE",
-              `Good day, ${userExist.firstName} ${userExist.lastName}`,
-              userExist,
-            ]);
-    } else {
-      res.status(404).json("User account not found");
-    }
+    if (!passwordMatch) return res.status(400).json({ message: err.message });
+    return userExist.userRole == "Admin"
+      ? res
+          .status(200)
+          .json([
+            "WELCOME TO ADMIN PAGE",
+            `Good day, ${userExist.firstName} ${userExist.lastName}`,
+            userExist,
+          ])
+      : res
+          .status(200)
+          .json([
+            "WELCOME TO USER PAGE",
+            `Good day, ${userExist.firstName} ${userExist.lastName}`,
+            userExist,
+          ]);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(404).json("User not found");
   }
 });
 
