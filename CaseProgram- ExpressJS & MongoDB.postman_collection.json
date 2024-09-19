@@ -1,0 +1,815 @@
+{
+	"info": {
+		"_postman_id": "3a8be3be-594e-4f90-98b2-9259413335c9",
+		"name": "CaseProgram- ExpressJS & MongoDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38134634"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "localhost:3000/user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user/:id1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user/:id2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/userAccessToken",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImplcnNvbkBnbWFpbC5jb20iLCJ1c2VyUm9sZSI6IkFkbWluIiwiaWF0IjoxNzI2NTYxMzc3LCJleHAiOjE3MjY1NjQ5Nzd9.cHeHFmht6-jwfRH7zbR4dL-ASFc3B9MLHhFr9atm3J8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/userTokenData",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"userTokenData"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/refreshToken",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZTdlM2QwOWI1ZTU4ZGQ5ZWYyNjkzYyIsImVtYWlsIjoiamVyc29uQGdtYWlsLmNvbSIsInVzZXJSb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjY2NDE4MDcsImV4cCI6MTcyNjY0NTQwN30.Ue97_0GWKa423gfqN9BRIzl36AtJHgoGQfTA3lUOyo0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/refreshToken",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"refreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/signup",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Juan\",\r\n    \"lastName\": \"Dela Cruz\",\r\n    \"age\": 23,\r\n    \"contactNum\": \"09123456788\",\r\n    \"username\": \"Juan\",\r\n    \"email\": \"juan@gmail.com\",\r\n    \"password\": \"juan123\",\r\n    \"userRole\": \"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/signup",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// //Role: ADMIN\r\n{\r\n    \"email\": \"jerson@gmail.com\",\r\n    \"password\": \"jk123\"\r\n}\r\n\r\n// Role: USER\r\n// {\r\n//     \"email\": \"juan@gmail.com\",\r\n//     \"password\": \"juan123\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user/:id1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"66e3ec393dd6595708fc9ec3\",\r\n    \"fileNumber\": \"035-01-CA updated\",\r\n    \"caseTitle\": \"Complainant vs Respondent Updated\",\r\n    \"caseNumber\": 10,\r\n    \"caseStatus\": \"RESOLVED\",\r\n    \"kindOfCase\": \"Civil\",\r\n    \"courtCase\": \"Court of Appeals\",\r\n    \"engagedDate\": \"2024-12-12T00:00:00.000Z\",\r\n    \"location\": \"CARMEN, AGUSAN DEL NORTE\",\r\n    \"clientName\": \"Sample Name\",\r\n    \"__v\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user/:id2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"66e3ec613dd6595708fc9ec3\",\r\n    \"fileNumber\": \"035-01-CA2\",\r\n    \"caseTitle\": \"Complainant vs Respondent2 Updated\",\r\n    \"caseNumber\": 12,\r\n    \"caseStatus\": \"ACTIVE\",\r\n    \"kindOfCase\": \"Civil2\",\r\n    \"courtCase\": \"Court of Appeals2\",\r\n    \"engagedDate\": \"2024-10-10T00:00:00.000Z\",\r\n    \"location\": \"CARMEN, AGUSAN DEL NORTE2\",\r\n    \"clientName\": \"Sample Name2\",\r\n    \"__v\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/case/66e3ec613dd6595708fc9ec3",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"66e3ec613dd6595708fc9ec3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user/:id1",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/user/:id2",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cases",
+			"item": [
+				{
+					"name": "localhost:3000/case",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/case",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case/:id1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/case/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case/:id2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/case/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fileNumber\": \"035-01-CA2\",\r\n    \"caseTitle\": \"Complainant vs Respondent\",\r\n    \"caseNumber\": 15,\r\n    \"caseStatus\": \"RESOLVED\",\r\n    \"kindOfCase\": \"Civil1\",\r\n    \"courtCase\": \"Court of Appeals\",\r\n    \"engagedDate\": \"2024-12-12\",\r\n    \"location\": \"MALOLOS, BULACAN\",\r\n    \"clientName\": \"Sample Name\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/case",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case/:id1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"66e3ec393dd6595708fc9ec3\",\r\n    \"fileNumber\": \"035-01-CA updated\",\r\n    \"caseTitle\": \"Complainant vs Respondent Updated\",\r\n    \"caseNumber\": 10,\r\n    \"caseStatus\": \"RESOLVED\",\r\n    \"kindOfCase\": \"Civil\",\r\n    \"courtCase\": \"Court of Appeals\",\r\n    \"engagedDate\": \"2024-12-12T00:00:00.000Z\",\r\n    \"location\": \"CARMEN, AGUSAN DEL NORTE\",\r\n    \"clientName\": \"Sample Name\",\r\n    \"__v\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/case/66e6d533b074d98c7c49c06d",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"66e6d533b074d98c7c49c06d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case/:id2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"66e3ec613dd6595708fc9ec3\",\r\n    \"fileNumber\": \"035-01-CA2\",\r\n    \"caseTitle\": \"Complainant vs Respondent2 Updated\",\r\n    \"caseNumber\": 12,\r\n    \"caseStatus\": \"ACTIVE\",\r\n    \"kindOfCase\": \"Civil2\",\r\n    \"courtCase\": \"Court of Appeals2\",\r\n    \"engagedDate\": \"2024-10-10T00:00:00.000Z\",\r\n    \"location\": \"CARMEN, AGUSAN DEL NORTE2\",\r\n    \"clientName\": \"Sample Name2\",\r\n    \"__v\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/case/66e3ec613dd6595708fc9ec3",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"66e3ec613dd6595708fc9ec3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/case",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case/:id1",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/case/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/case/:id2",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/case/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"case",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "hearings",
+			"item": [
+				{
+					"name": "localhost:3000/hearing",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing/:id1",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing/:id2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"hearingName\": \"Hearing 1\",\r\n    \"hearingDate\": \"2024-10-10\",\r\n    \"hearingNumber\": 2,\r\n    \"caseId\":\"66e78a91a74e19cd667f74cc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/hearing",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing/:id1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing/:id2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const dateNow = new Date();\r",
+									"pm.environment.set('currentDate', dateNow.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing/:id1",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/hearing/:id2",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hearing/2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hearing",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
