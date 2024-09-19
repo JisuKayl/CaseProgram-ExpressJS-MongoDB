@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Case = require("../models/casedata");
+const authenticate = require("../middleware/authenticate");
 
 // Get All Cases
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const cases = await Case.find().populate("hearings");
     res.status(200).json(cases);
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get Case by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   try {
     const caseItem = await Case.findById(req.params.id);
     if (!caseItem) return res.status(404).json({ message: "Case not found" });
@@ -24,7 +25,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a Case
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   const caseItem = new Case({
     fileNumber: req.body.fileNumber,
     caseTitle: req.body.caseTitle,
@@ -48,7 +49,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update Case by ID
-router.put("/:id/", async (req, res) => {
+router.put("/:id/", authenticate, async (req, res) => {
   try {
     const caseItem = await Case.findById(req.params.id);
     if (!caseItem) return res.status(404).json({ message: "Case not found" });
@@ -72,7 +73,7 @@ router.put("/:id/", async (req, res) => {
 });
 
 // Delete Case by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const caseItem = await Case.findById(req.params.id);
     if (!caseItem) return res.status(404).json({ message: "Case not found" });
@@ -85,7 +86,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Delete All Cases
-router.delete("/", async (req, res) => {
+router.delete("/", authenticate, async (req, res) => {
   try {
     await Case.deleteMany();
     res.status(200).json({ message: "All cases deleted successfully" });

@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Hearing = require("../models/hearingdata");
+const authenticate = require("../middleware/authenticate");
 
 // Get All Hearings
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const hearings = await Hearing.find().populate("caseId");
     res.status(200).json(hearings);
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get Hearing by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   try {
     const hearingItem = await Hearing.findById(req.params.id);
     if (!hearingItem)
@@ -25,7 +26,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a Hearing
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   const hearingItem = new Hearing({
     hearingName: req.body.hearingName,
     hearingDate: req.body.hearingDate,
@@ -43,7 +44,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update Hearing by ID
-router.put("/:id/", async (req, res) => {
+router.put("/:id/", authenticate, async (req, res) => {
   try {
     const hearingItem = await Hearing.findById(req.params.id);
     if (!hearingItem)
@@ -63,7 +64,7 @@ router.put("/:id/", async (req, res) => {
 });
 
 // Delete Hearing by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const hearingItem = await Hearing.findById(req.params.id);
     if (!hearingItem)
@@ -77,7 +78,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Delete All Hearings
-router.delete("/", async (req, res) => {
+router.delete("/", authenticate, async (req, res) => {
   try {
     await Hearing.deleteMany();
     res.status(200).json({ message: "All hearings deleted successfully" });

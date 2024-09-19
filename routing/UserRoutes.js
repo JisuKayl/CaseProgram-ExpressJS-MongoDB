@@ -1,10 +1,47 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userdata");
+const authenticate = require("../middleware/authenticate");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
+
+// Get user data by access token
+router.get("/userAccessToken", authenticate, (req, res) => {
+  try {
+    const accessToken = req.headers.authorization.split(" ")[1];
+    const decodedAccessToken = jwt.decode(accessToken);
+    return res
+      .status(200)
+      .json({ originalAccessToken: accessToken, decodedAccessToken });
+  } catch (err) {
+    res.status(400).json("Error 400: Bad request");
+  }
+});
+
+//Route for refreshing access token
+router.post("/refreshToken", (req, res) => {
+  const refreshToken = req.cookies["refreshToken"];
+  if (!refreshToken) {
+    return res.status(401).send("Access Denied. No refresh token provided.");
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+    const accessToken = jwt.sign(
+      { id: decoded.id, email: decoded.email, userRole: decoded.userRole },
+      JWT_SECRET,
+      { expiresIn: 5000 }
+    );
+
+    res
+      .header("Authorization", accessToken)
+      .send({ accessToken, refreshToken });
+  } catch (error) {
+    return res.status(400).send("Invalid refresh token.");
+  }
+});
 
 // Register a User
 router.post("/signup", async (req, res) => {
@@ -39,42 +76,51 @@ router.post("/login", async (req, res) => {
 
   try {
     const userExist = await User.findOne({ email });
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         id: userExist._id,
         email: userExist.email,
         userRole: userExist.userRole,
       },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: 5000 }
+    );
+    const refreshToken = jwt.sign(
+      {
+        id: userExist._id,
+        email: userExist.email,
+        userRole: userExist.userRole,
+      },
+      JWT_SECRET,
+      { expiresIn: "1d" }
     );
     const passwordMatch = await bcrypt.compare(password, userExist.password);
     if (!passwordMatch)
       return res.status(404).json({ message: "User not found" });
     return userExist.userRole == "Admin"
       ? res
+          .cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            sameSite: "strict",
+          })
+          .header("Authorization", accessToken)
           .status(200)
-          .json([
-            "WELCOME TO ADMIN PAGE",
-            `Good day, ${userExist.firstName} ${userExist.lastName}`,
-            userExist,
-            { token },
-          ])
+          .send({ userExist, accessToken, refreshToken })
       : res
+          .cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            sameSite: "strict",
+          })
+          .header("Authorization", accessToken)
           .status(200)
-          .json([
-            "WELCOME TO USER PAGE",
-            `Good day, ${userExist.firstName} ${userExist.lastName}`,
-            userExist,
-            { token },
-          ]);
+          .send({ userExist, accessToken, refreshToken });
   } catch (err) {
-    res.status(404).json({ message: "User not found" });
+    res.status(404).json({ message: "User not found." });
   }
 });
 
 // Get All Users
-router.get("/user", auth, async (req, res) => {
+router.get("/user", authenticate, async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
@@ -83,32 +129,8 @@ router.get("/user", auth, async (req, res) => {
   }
 });
 
-async function auth(req, res, next) {
-  try {
-    const token = req.headers.authorization.replace("Bearer ", "");
-    await jwt.verify(token, JWT_SECRET);
-    req.token = token;
-
-    next();
-  } catch (err) {
-    res.status(401).json({ message: err.message });
-  }
-}
-
-router.get("/userTokenData", (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.decode(token);
-    return decodedToken == null
-      ? res.status(404).json("Token not found")
-      : res.status(200).json({ originalToken: token, decodedToken });
-  } catch (err) {
-    res.status(400).json("Error 400: Bad request");
-  }
-});
-
 // Get User by ID
-router.get("/user/:id", async (req, res) => {
+router.get("/user/:id", authenticate, async (req, res) => {
   try {
     const userItem = await User.findById(req.params.id);
     if (!userItem) return res.status(404).json({ message: "User not found" });
@@ -119,7 +141,7 @@ router.get("/user/:id", async (req, res) => {
 });
 
 // Update User by ID
-router.put("/user/:id/", async (req, res) => {
+router.put("/user/:id/", authenticate, async (req, res) => {
   try {
     const userItem = await User.findById(req.params.id);
     const { password } = req.body;
@@ -146,7 +168,7 @@ router.put("/user/:id/", async (req, res) => {
 });
 
 // Delete User by ID
-router.delete("/user/:id", async (req, res) => {
+router.delete("/user/:id", authenticate, async (req, res) => {
   try {
     const userItem = await User.findById(req.params.id);
     if (!userItem) return res.status(404).json({ message: "User not found" });
@@ -159,7 +181,7 @@ router.delete("/user/:id", async (req, res) => {
 });
 
 // Delete All Users
-router.delete("/user", async (req, res) => {
+router.delete("/user", authenticate, async (req, res) => {
   try {
     await User.deleteMany();
     res.status(200).json({ message: "All users deleted successfully" });
