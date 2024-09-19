@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Case = require("../models/casedata");
-const authenticate = require("../middleware/authenticate");
+const Case = require("../models/caseData");
+const authenticate = require("../middlewares/authenticate");
 
 // Get All Cases
 router.get("/", authenticate, async (req, res) => {

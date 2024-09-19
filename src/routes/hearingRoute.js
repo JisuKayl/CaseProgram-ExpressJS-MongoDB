@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Hearing = require("../models/hearingdata");
-const authenticate = require("../middleware/authenticate");
+const Hearing = require("../models/hearingData");
+const authenticate = require("../middlewares/authenticate");
 
 // Get All Hearings
 router.get("/", authenticate, async (req, res) => {

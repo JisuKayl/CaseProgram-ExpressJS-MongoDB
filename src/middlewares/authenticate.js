@@ -10,7 +10,6 @@ const authenticate = async (req, res, next) => {
     if (accessToken == "" || null || undefined) {
       return res.status(401).send("Access Denied. No token provided.");
     }
-    console.log(accessToken);
 
     const decoded = await jwt.verify(accessToken, JWT_SECRET);
     req.accessToken = accessToken;

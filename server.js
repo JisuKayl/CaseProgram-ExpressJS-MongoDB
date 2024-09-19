@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const routes = require("./Routing.js");
-const db = require("./DbCon.js");
+const routes = require("./src/routes/allRoutes");
 const cookieParser = require("cookie-parser");
+require("./dbCon");
 require("dotenv").config();
 const port = process.env.PORT;
 
