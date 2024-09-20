@@ -117,6 +117,17 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 });
 
+exports.logout = async function (req, res) {
+  res.clearCookie("token"); // Assuming the JWT is stored in a cookie
+  res.clearCookie("refreshToken");
+  res.status(200).json({
+    response: {
+      code: 200,
+      description: "Logged out successfully",
+    },
+  });
+};
+
 exports.getAllUsers = asyncHandler(async (req, res, next) => {
   try {
     const users = await User.find();

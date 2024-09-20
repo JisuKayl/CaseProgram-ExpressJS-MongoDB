@@ -6,7 +6,7 @@ const UserController = require("../controllers/UserController");
 // Get user data by access token
 router.get("/accessToken", authenticate, UserController.accessToken);
 
-//Route for refreshing access token
+// Route for refreshing access token
 router.post("/refreshToken", UserController.refreshToken);
 
 // Register a User
@@ -14,6 +14,9 @@ router.post("/signup", UserController.signup);
 
 // Sign-in a User
 router.post("/login", UserController.login);
+
+// Logout a user
+router.post("/logout", UserController.logout);
 
 // Get All Users
 router.get("/users", authenticate, UserController.getAllUsers);

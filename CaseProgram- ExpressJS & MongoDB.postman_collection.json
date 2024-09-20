@@ -333,6 +333,24 @@
 					"response": []
 				},
 				{
+					"name": "localhost:3000/logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "localhost:3000/users/:id1",
 					"event": [
 						{
