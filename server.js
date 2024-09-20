@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const routes = require("./src/routes/allRoutes");
+const routes = require("./src/routes/index");
 const cookieParser = require("cookie-parser");
-require("./dbCon");
+require("./src/database/mongoose");
 require("dotenv").config();
 const port = process.env.PORT;
 

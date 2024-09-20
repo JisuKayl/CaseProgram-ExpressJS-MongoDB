@@ -1,4 +1,4 @@
-const Case = require("../models/caseData");
+const Case = require("../models/CaseData");
 const asyncHandler = require("express-async-handler");
 
 exports.getAllCases = asyncHandler(async (req, res, next) => {

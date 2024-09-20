@@ -1,14 +1,14 @@
-const User = require("../models/userData");
+const User = require("../models/UserData");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
-exports.getUserByAccessToken = asyncHandler(async (req, res, next) => {
+exports.accessToken = asyncHandler(async (req, res, next) => {
   try {
     const accessToken = req.headers.authorization.split(" ")[1];
-    const decodedAccessToken = jwt.decode(accessToken);
+    const decodedAccessToken = jwt.verify(accessToken, JWT_SECRET);
     return res
       .status(200)
       .json({ originalAccessToken: accessToken, decodedAccessToken });
@@ -17,16 +17,20 @@ exports.getUserByAccessToken = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.refreshAccessToken = asyncHandler(async (req, res, next) => {
+exports.refreshToken = asyncHandler(async (req, res, next) => {
   const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken) {
     return res.status(401).send("Access Denied. No refresh token provided.");
   }
 
   try {
-    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+    const decodedRefreshToken = jwt.verify(refreshToken, JWT_SECRET);
     const accessToken = jwt.sign(
-      { id: decoded.id, email: decoded.email, userRole: decoded.userRole },
+      {
+        id: decodedRefreshToken.id,
+        email: decodedRefreshToken.email,
+        userRole: decodedRefreshToken.userRole,
+      },
       JWT_SECRET,
       { expiresIn: 5000 }
     );
@@ -39,7 +43,7 @@ exports.refreshAccessToken = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.signupUser = asyncHandler(async (req, res, next) => {
+exports.signup = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -65,7 +69,7 @@ exports.signupUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.loginUser = asyncHandler(async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -158,7 +162,7 @@ exports.updateUserById = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.deleteAllUser = asyncHandler(async (req, res, next) => {
+exports.deleteAllUsers = asyncHandler(async (req, res, next) => {
   try {
     await User.deleteMany();
     res.status(200).json({ message: "All users deleted successfully" });
