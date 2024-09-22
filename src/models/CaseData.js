@@ -35,7 +35,8 @@ const caseSchema = mongoose.Schema({
     required: true,
   },
   clientName: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
     required: true,
   },
   hearings: [

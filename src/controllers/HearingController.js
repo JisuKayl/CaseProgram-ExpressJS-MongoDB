@@ -12,7 +12,9 @@ exports.getAllHearings = asyncHandler(async (req, res, next) => {
 
 exports.getHearingById = asyncHandler(async (req, res, next) => {
   try {
-    const hearingItem = await Hearing.findById(req.params.id);
+    const hearingItem = await Hearing.findById(req.params.id).populate(
+      "caseId"
+    );
     if (!hearingItem)
       return res.status(404).json({ message: "Hearing not found" });
     res.status(200).json(hearingItem);

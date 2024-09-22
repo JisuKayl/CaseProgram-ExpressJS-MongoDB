@@ -3,7 +3,10 @@ const asyncHandler = require("express-async-handler");
 
 exports.getAllCases = asyncHandler(async (req, res, next) => {
   try {
-    const cases = await Case.find().populate("hearings");
+    const cases = await Case.find().populate("hearings").populate({
+      path: "clientName", // Referencing the clientName field
+      select: "firstName lastName -_id", // Selecting only firstName and lastName, excluding _id
+    });
     res.status(200).json(cases);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -12,7 +15,12 @@ exports.getAllCases = asyncHandler(async (req, res, next) => {
 
 exports.getCasebyId = asyncHandler(async (req, res, next) => {
   try {
-    const caseItem = await Case.findById(req.params.id);
+    const caseItem = await Case.findById(req.params.id)
+      .populate("hearings")
+      .populate({
+        path: "clientName",
+        select: "firstName lastName -_id",
+      });
     if (!caseItem) return res.status(404).json({ message: "Case not found" });
     res.status(200).json(caseItem);
   } catch (err) {
