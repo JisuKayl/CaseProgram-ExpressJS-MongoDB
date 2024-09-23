@@ -22,15 +22,15 @@ router.post("/logout", UserController.logout);
 router.get("/users", authenticate, UserController.getAllUsers);
 
 // Get User by ID
-router.get("/user/:id", authenticate, UserController.getUserById);
+router.get("/users/:id", authenticate, UserController.getUserById);
 
 // Update User by ID
-router.put("/user/:id/", authenticate, UserController.updateUserById);
+router.put("/users/:id/", authenticate, UserController.updateUserById);
 
 // Delete All Users
-router.delete("/user", authenticate, UserController.deleteAllUsers);
+router.delete("/users", authenticate, UserController.deleteAllUsers);
 
 // Delete User by ID
-router.delete("/user/:id", authenticate, UserController.deleteUserById);
+router.delete("/users/:id", authenticate, UserController.deleteUserById);
 
 module.exports = router;

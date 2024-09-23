@@ -32,7 +32,7 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
         userRole: decodedRefreshToken.userRole,
       },
       JWT_SECRET,
-      { expiresIn: 5000 }
+      { expiresIn: "1h" }
     );
 
     res
@@ -81,7 +81,7 @@ exports.login = asyncHandler(async (req, res, next) => {
         userRole: userExist.userRole,
       },
       JWT_SECRET,
-      { expiresIn: 5000 }
+      { expiresIn: "1h" }
     );
     const refreshToken = jwt.sign(
       {

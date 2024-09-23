@@ -1,12 +1,18 @@
 const Case = require("../models/CaseData");
 const asyncHandler = require("express-async-handler");
+const userFullName = require("../utils/UserFullNameUtil");
 
 exports.getAllCases = asyncHandler(async (req, res, next) => {
   try {
-    const cases = await Case.find().populate("hearings").populate({
-      path: "clientName", // Referencing the clientName field
-      select: "firstName lastName -_id", // Selecting only firstName and lastName, excluding _id
-    });
+    const cases = await Case.find()
+      .populate("hearings")
+      .populate({
+        path: "clientName",
+        select: {
+          _id: 0,
+          fullname: userFullName(),
+        },
+      });
     res.status(200).json(cases);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -19,7 +25,10 @@ exports.getCasebyId = asyncHandler(async (req, res, next) => {
       .populate("hearings")
       .populate({
         path: "clientName",
-        select: "firstName lastName -_id",
+        select: {
+          _id: 0,
+          fullname: userFullName(),
+        },
       });
     if (!caseItem) return res.status(404).json({ message: "Case not found" });
     res.status(200).json(caseItem);
