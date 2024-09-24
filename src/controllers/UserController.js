@@ -1,4 +1,5 @@
 const User = require("../models/UserData");
+const Blacklist = require("../models/BlacklistData");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -117,16 +118,23 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.logout = async function (req, res) {
-  res.clearCookie("token"); // Assuming the JWT is stored in a cookie
+exports.logout = asyncHandler(async (req, res) => {
+  const accessToken = req.headers["authorization"].split(" ")[1];
+  const blacklistItem = new Blacklist({
+    token: accessToken,
+  });
+
+  const newBlacklist = await blacklistItem.save();
+
   res.clearCookie("refreshToken");
   res.status(200).json({
     response: {
       code: 200,
+      blacklistItem: newBlacklist,
       description: "Logged out successfully",
     },
   });
-};
+});
 
 exports.getAllUsers = asyncHandler(async (req, res, next) => {
   try {
