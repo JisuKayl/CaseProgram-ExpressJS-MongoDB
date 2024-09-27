@@ -53,9 +53,9 @@ const userSchema = mongoose.Schema(
     updatedAt: {
       type: Date,
     },
-    lastLoggedAt: {
-      type: Date,
-    },
+    // lastLoggedAt: {
+    //   type: Date,
+    // },
     //   isUserEnabled: {
     //     type: Boolean,
     //     required: true,

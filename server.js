@@ -12,7 +12,7 @@ const port = process.env.PORT;
 const app = express();
 const server = http.createServer(app);
 
-const wss = new WebSocketServer({ server: server });
+const wss = new WebSocketServer({ server });
 
 app.use(bodyParser.json());
 app.use(cookieParser());

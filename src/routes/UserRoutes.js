@@ -3,10 +3,10 @@ const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
 const UserController = require("../controllers/UserController");
 
-// Get user data by access token
+// Get User Data By Access Token
 router.get("/accessToken", authenticate, UserController.accessToken);
 
-// Route for refreshing access token
+// Route For Refreshing Access Token
 router.post("/refreshToken", UserController.refreshToken);
 
 // Register a User
