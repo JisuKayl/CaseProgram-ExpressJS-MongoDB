@@ -3,6 +3,7 @@ const Blacklist = require("../models/BlacklistData");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { serialize } = require("cookie");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -36,9 +37,7 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
-    res
-      .header("Authorization", accessToken)
-      .send({ accessToken, refreshToken });
+    res.header("Authorization", accessToken).send({ accessToken });
   } catch (error) {
     return res.status(400).send("Invalid refresh token.");
   }
@@ -100,19 +99,21 @@ exports.login = asyncHandler(async (req, res, next) => {
       ? res
           .cookie("refreshToken", refreshToken, {
             httpOnly: true,
+            secure: true,
             sameSite: "strict",
           })
           .header("Authorization", accessToken)
           .status(200)
-          .send({ userExist, accessToken, refreshToken })
+          .send({ userExist, accessToken })
       : res
           .cookie("refreshToken", refreshToken, {
             httpOnly: true,
+            secure: true,
             sameSite: "strict",
           })
           .header("Authorization", accessToken)
           .status(200)
-          .send({ userExist, accessToken, refreshToken });
+          .send({ userExist, accessToken });
   } catch (err) {
     res.status(404).json({ message: "User not found." });
   }
@@ -124,13 +125,20 @@ exports.logout = asyncHandler(async (req, res) => {
     token: accessToken,
   });
 
-  const newBlacklist = await blacklistItem.save();
+  await blacklistItem.save();
 
+  const serializedJWT = serialize("refreshToken", true, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: -1,
+  });
+
+  res.setHeader("Set-Cookie", serializedJWT);
   res.clearCookie("refreshToken");
   res.status(200).json({
     response: {
       code: 200,
-      blacklistItem: newBlacklist,
       description: "Logged out successfully",
     },
   });
