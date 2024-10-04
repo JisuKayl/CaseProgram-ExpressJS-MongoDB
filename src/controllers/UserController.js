@@ -1,5 +1,5 @@
-const User = require("../models/UserData");
-const Blacklist = require("../models/BlacklistData");
+const User = require("../models/UserModel");
+const Blacklist = require("../models/BlacklistModel");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

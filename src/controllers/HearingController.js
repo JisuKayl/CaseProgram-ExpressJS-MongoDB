@@ -1,4 +1,4 @@
-const Hearing = require("../models/HearingData");
+const Hearing = require("../models/HearingModel");
 const asyncHandler = require("express-async-handler");
 
 exports.getAllHearings = asyncHandler(async (req, res, next) => {

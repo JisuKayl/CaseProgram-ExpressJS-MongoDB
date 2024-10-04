@@ -1,7 +1,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
-const Blacklist = require("../models/BlacklistData");
+const Blacklist = require("../models/BlacklistModel");
 
 //Authentication middleware function
 const authenticate = async (req, res, next) => {

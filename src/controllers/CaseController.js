@@ -1,4 +1,4 @@
-const Case = require("../models/CaseData");
+const Case = require("../models/CaseModel");
 const asyncHandler = require("express-async-handler");
 const userFullName = require("../utils/UserFullNameUtil");
 
