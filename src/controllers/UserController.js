@@ -103,7 +103,7 @@ exports.login = asyncHandler(async (req, res, next) => {
       );
     return userExist.userRole == "Admin"
       ? infoLogger.info(
-          `${userExist.username} successfully logged in as Admin`
+          `${userExist.username} successfully logged in as ${userExist.userRole}`
         ) &&
           res
             .cookie("refreshToken", refreshToken, {
@@ -115,7 +115,7 @@ exports.login = asyncHandler(async (req, res, next) => {
             .status(200)
             .json({ userExist, accessToken })
       : infoLogger.info(
-          `${userExist.username} successfully logged in as User`
+          `${userExist.username} successfully logged in as ${userExist.userRole}`
         ) &&
           res
             .cookie("refreshToken", refreshToken, {
