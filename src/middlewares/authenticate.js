@@ -8,7 +8,9 @@ const authenticate = async (req, res, next) => {
   try {
     const accessToken = req.headers["authorization"].split(" ")[1];
     if (!accessToken)
-      return res.status(401).send("Access Denied. No token provided.");
+      return res
+        .status(401)
+        .json({ messsage: "Access Denied. No token provided." });
     const checkIfBlacklisted = await Blacklist.findOne({
       token: accessToken,
     });
@@ -28,7 +30,9 @@ const authenticate = async (req, res, next) => {
   } catch (error) {
     return res
       .status(400)
-      .send("Token error. The provided token might be invalid or expired.");
+      .json({
+        message: "Token error. The provided token might be invalid or expired.",
+      });
   }
 };
 

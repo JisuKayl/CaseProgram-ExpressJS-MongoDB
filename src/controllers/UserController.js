@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const { serialize } = require("cookie");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
+const { infoLogger, errorLogger } = require("../config/logger");
 
 exports.accessToken = asyncHandler(async (req, res, next) => {
   try {
@@ -15,14 +16,16 @@ exports.accessToken = asyncHandler(async (req, res, next) => {
       .status(200)
       .json({ originalAccessToken: accessToken, decodedAccessToken });
   } catch (err) {
-    res.status(400).json("Error 400: Bad request");
+    res.status(400).json({ message: err.message });
   }
 });
 
 exports.refreshToken = asyncHandler(async (req, res, next) => {
   const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken) {
-    return res.status(401).send("Access Denied. No refresh token provided.");
+    return res
+      .status(401)
+      .json({ message: "Access Denied. No refresh token provided." });
   }
 
   try {
@@ -37,9 +40,9 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
-    res.header("Authorization", accessToken).send({ accessToken });
-  } catch (error) {
-    return res.status(400).send("Invalid refresh token.");
+    res.header("Authorization", accessToken).json({ accessToken });
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
   }
 });
 
@@ -94,28 +97,38 @@ exports.login = asyncHandler(async (req, res, next) => {
     );
     const passwordMatch = await bcrypt.compare(password, userExist.password);
     if (!passwordMatch)
-      return res.status(404).json({ message: "User not found" });
+      return (
+        errorLogger.error("A user failed to login") &&
+        res.status(404).json({ message: "User not found" })
+      );
     return userExist.userRole == "Admin"
-      ? res
-          .cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-          })
-          .header("Authorization", accessToken)
-          .status(200)
-          .send({ userExist, accessToken })
-      : res
-          .cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-          })
-          .header("Authorization", accessToken)
-          .status(200)
-          .send({ userExist, accessToken });
+      ? infoLogger.info(
+          `${userExist.username} successfully logged in as Admin`
+        ) &&
+          res
+            .cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              secure: true,
+              sameSite: "strict",
+            })
+            .header("Authorization", accessToken)
+            .status(200)
+            .json({ userExist, accessToken })
+      : infoLogger.info(
+          `${userExist.username} successfully logged in as User`
+        ) &&
+          res
+            .cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              secure: true,
+              sameSite: "strict",
+            })
+            .header("Authorization", accessToken)
+            .status(200)
+            .json({ userExist, accessToken });
   } catch (err) {
-    res.status(404).json({ message: "User not found." });
+    errorLogger.error("A user failed to login") &&
+      res.status(404).json({ message: err.message });
   }
 });
 
