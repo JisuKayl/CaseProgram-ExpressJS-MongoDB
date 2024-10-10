@@ -4,6 +4,7 @@ const { WebSocketServer } = require("ws");
 
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const loggerMiddleware = require("./src/middlewares/loggerMiddleware");
 const routes = require("./src/routes/index");
 require("./src/database/mongoose");
 require("dotenv").config();
@@ -14,6 +15,7 @@ const server = http.createServer(app);
 
 const wss = new WebSocketServer({ server });
 
+app.use(loggerMiddleware);
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(routes);
