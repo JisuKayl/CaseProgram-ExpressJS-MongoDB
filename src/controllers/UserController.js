@@ -18,13 +18,11 @@ exports.accessToken = asyncHandler(async (req, res, next) => {
     const accessToken = req.headers.authorization.split(" ")[1];
     const decodedAccessToken = jwt.verify(accessToken, JWT_SECRET);
     setSuccessMessage(res, "Successfully fetched user by token.");
-    return res
-      .status(200)
-      .json({
-        originalAccessToken: accessToken,
-        decodedAccessToken,
-        message: getSuccessMessage(res),
-      });
+    return res.status(200).json({
+      originalAccessToken: accessToken,
+      decodedAccessToken,
+      message: getSuccessMessage(res),
+    });
   } catch (err) {
     setErrorMessage(res, "Failed to fetch user by token.");
     res.status(400).json({ message: getErrorMessage(res) });
@@ -53,7 +51,7 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
     res
       .header("Authorization", accessToken)
       .status(200)
-      .json({ accessToken, message: getErrorMessage(res) });
+      .json({ accessToken, message: getSuccessMessage(res) });
   } catch (err) {
     setErrorMessage(res, err.message);
     return res.status(400).json({ message: getErrorMessage(res) });
