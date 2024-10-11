@@ -24,14 +24,29 @@ const loggerMiddleware = (req, res, next) => {
         success: getSuccessMessage(res),
         error: getErrorMessage(res),
       };
-      if (res.statusCode >= 200 && res.statusCode < 400) {
-        infoLogger.info(
-          `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.success}`
-        );
+
+      // Check if user information is available
+      if (req.fullName && req.userRole) {
+        if (res.statusCode >= 200 && res.statusCode < 400) {
+          infoLogger.info(
+            `User: ${req.fullName}, Role: ${req.userRole} - Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.success}`
+          );
+        } else {
+          errorLogger.error(
+            `User: ${req.fullName}, Role: ${req.userRole} - Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.error}`
+          );
+        }
       } else {
-        errorLogger.error(
-          `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.error}`
-        );
+        // Log without user information
+        if (res.statusCode >= 200 && res.statusCode < 400) {
+          infoLogger.info(
+            `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.success}`
+          );
+        } else {
+          errorLogger.error(
+            `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.error}`
+          );
+        }
       }
     });
 

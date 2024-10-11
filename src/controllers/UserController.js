@@ -38,16 +38,29 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
     }
 
     const decodedRefreshToken = jwt.verify(refreshToken, JWT_SECRET);
+
+    const user = await User.findById(decodedRefreshToken.id);
+    if (!user) {
+      setErrorMessage(res, "User not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
+
     const accessToken = jwt.sign(
       {
-        id: decodedRefreshToken.id,
-        email: decodedRefreshToken.email,
-        userRole: decodedRefreshToken.userRole,
+        id: user._id,
+        email: user.email,
+        userRole: user.userRole,
       },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
-    setSuccessMessage(res, "Refresh token successfully validated.");
+
+    const userFullName = `${user.firstName} ${user.lastName}`;
+    setSuccessMessage(
+      res,
+      `${userFullName} successfully refreshed the access token.`
+    );
+
     res
       .header("Authorization", accessToken)
       .status(200)
@@ -78,7 +91,11 @@ exports.signup = asyncHandler(async (req, res, next) => {
 
     const newUser = await userItem.save();
 
-    setSuccessMessage(res, "Account registered successfully.");
+    const userFullName = `${newUser.firstName} ${newUser.lastName}`;
+    setSuccessMessage(
+      res,
+      `${userFullName} successfully registered as ${newUser.userRole}`
+    );
     res.status(201).json({ newUser, message: getSuccessMessage(res) });
   } catch (err) {
     setErrorMessage(res, "Failed to sign up an account");
@@ -107,6 +124,8 @@ exports.login = asyncHandler(async (req, res, next) => {
         id: userExist._id,
         email: userExist.email,
         userRole: userExist.userRole,
+        firstName: userExist.firstName,
+        lastName: userExist.lastName,
       },
       JWT_SECRET,
       { expiresIn: "1h" }
@@ -124,7 +143,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
     setSuccessMessage(
       res,
-      `${userExist.username} successfully logged in as ${userExist.userRole}`
+      `${userExist.firstName} ${userExist.lastName} successfully logged in as ${userExist.userRole}`
     );
     return res
       .cookie("refreshToken", refreshToken, {
@@ -143,22 +162,34 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 exports.logout = asyncHandler(async (req, res) => {
   const accessToken = req.headers["authorization"].split(" ")[1];
-  const blacklistItem = new Blacklist({ token: accessToken });
 
-  await blacklistItem.save();
+  try {
+    const decodedToken = jwt.verify(accessToken, JWT_SECRET);
+    const userFullName = `${decodedToken.firstName} ${decodedToken.lastName}`;
+    const userRole = decodedToken.userRole;
 
-  const serializedJWT = serialize("refreshToken", true, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: -1,
-  });
+    const blacklistItem = new Blacklist({ token: accessToken });
+    await blacklistItem.save();
 
-  res.setHeader("Set-Cookie", serializedJWT);
-  res.clearCookie("refreshToken");
+    const serializedJWT = serialize("refreshToken", true, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: -1,
+    });
 
-  setSuccessMessage(res, "Logged out successfully");
-  res.status(200).json({ message: getSuccessMessage(res) });
+    res.setHeader("Set-Cookie", serializedJWT);
+    res.clearCookie("refreshToken");
+
+    setSuccessMessage(
+      res,
+      `${userFullName} (${userRole}) successfully logged out`
+    );
+    return res.status(200).json({ message: getSuccessMessage(res) });
+  } catch (err) {
+    setErrorMessage(res, "Invalid token or other error occurred.");
+    return res.status(400).json({ message: getErrorMessage(res) });
+  }
 });
 
 exports.getAllUsers = asyncHandler(async (req, res, next) => {

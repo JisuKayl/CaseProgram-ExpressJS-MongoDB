@@ -29,6 +29,7 @@ const authenticate = async (req, res, next) => {
     req.id = decoded.id;
     req.email = decoded.email;
     req.userRole = decoded.userRole;
+    req.fullName = `${decoded.firstName} ${decoded.lastName}`;
 
     next();
   } catch (error) {
