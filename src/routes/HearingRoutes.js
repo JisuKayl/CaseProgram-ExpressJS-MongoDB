@@ -19,6 +19,6 @@ router.put("/:id/", authenticate, HearingController.updateHearingById);
 router.delete("/", authenticate, HearingController.deleteAllHearings);
 
 // Delete Hearing by ID
-router.delete("/:id", authenticate, HearingController.deleteHearingByID);
+router.delete("/:id", authenticate, HearingController.deleteHearingById);
 
 module.exports = router;

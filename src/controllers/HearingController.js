@@ -1,12 +1,20 @@
 const Hearing = require("../models/HearingModel");
 const asyncHandler = require("express-async-handler");
+const {
+  setSuccessMessage,
+  setErrorMessage,
+  getSuccessMessage,
+  getErrorMessage,
+} = require("../utils/resLocalsUtil");
 
 exports.getAllHearings = asyncHandler(async (req, res, next) => {
   try {
     const hearings = await Hearing.find().populate("caseId");
-    res.status(200).json(hearings);
+    setSuccessMessage(res, "Fetched all hearings successfully.");
+    res.status(200).json({ hearings, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
 
@@ -15,11 +23,15 @@ exports.getHearingById = asyncHandler(async (req, res, next) => {
     const hearingItem = await Hearing.findById(req.params.id).populate(
       "caseId"
     );
-    if (!hearingItem)
-      return res.status(404).json({ message: "Hearing not found" });
-    res.status(200).json(hearingItem);
+    if (!hearingItem) {
+      setErrorMessage(res, "Hearing not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
+    setSuccessMessage(res, "Hearing retrieved successfully.");
+    res.status(200).json({ hearingItem, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
 
@@ -33,18 +45,21 @@ exports.createHearing = asyncHandler(async (req, res, next) => {
 
   try {
     const newHearing = await hearingItem.save();
-
-    res.status(201).json(newHearing);
+    setSuccessMessage(res, "Hearing created successfully.");
+    res.status(201).json({ newHearing, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    setErrorMessage(res, "Failed to create hearing.");
+    res.status(400).json({ message: getErrorMessage(res) });
   }
 });
 
 exports.updateHearingById = asyncHandler(async (req, res, next) => {
   try {
     const hearingItem = await Hearing.findById(req.params.id);
-    if (!hearingItem)
-      return res.status(404).json({ message: "Hearing not found" });
+    if (!hearingItem) {
+      setErrorMessage(res, "Hearing not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
 
     // Update fields
     hearingItem.hearingName = req.body.hearingName || hearingItem.hearingName;
@@ -53,30 +68,38 @@ exports.updateHearingById = asyncHandler(async (req, res, next) => {
       req.body.hearingNumber || hearingItem.hearingNumber;
 
     const updatedHearing = await hearingItem.save();
-    res.status(200).json(updatedHearing);
+    setSuccessMessage(res, "Hearing updated successfully.");
+    res.status(200).json({ updatedHearing, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(400).json({ message: getErrorMessage(res) });
   }
 });
 
 exports.deleteAllHearings = asyncHandler(async (req, res, next) => {
   try {
     await Hearing.deleteMany();
-    res.status(200).json({ message: "All hearings deleted successfully" });
+    setSuccessMessage(res, "All hearings deleted successfully.");
+    res.status(200).json({ message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
 
-exports.deleteHearingByID = asyncHandler(async (req, res, next) => {
+exports.deleteHearingById = asyncHandler(async (req, res, next) => {
   try {
     const hearingItem = await Hearing.findById(req.params.id);
-    if (!hearingItem)
-      return res.status(404).json({ message: "Hearing not found" });
+    if (!hearingItem) {
+      setErrorMessage(res, "Hearing not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
 
     await hearingItem.deleteOne();
-    res.status(200).json({ message: "Hearing deleted successfully" });
+    setSuccessMessage(res, "Hearing deleted successfully.");
+    res.status(200).json({ message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });

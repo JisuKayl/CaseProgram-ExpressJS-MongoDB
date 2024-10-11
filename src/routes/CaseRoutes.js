@@ -7,7 +7,7 @@ const CaseController = require("../controllers/CaseController");
 router.get("/", authenticate, CaseController.getAllCases);
 
 // Get Case by ID
-router.get("/:id", authenticate, CaseController.getCasebyId);
+router.get("/:id", authenticate, CaseController.getCaseById);
 
 // Create a Case
 router.post("/", authenticate, CaseController.createCase);

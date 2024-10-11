@@ -15,9 +15,9 @@ const server = http.createServer(app);
 
 const wss = new WebSocketServer({ server });
 
-app.use(loggerMiddleware);
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(loggerMiddleware);
 app.use(routes);
 
 wss.on("connection", (ws) => {

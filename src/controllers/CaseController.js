@@ -1,5 +1,11 @@
 const Case = require("../models/CaseModel");
 const asyncHandler = require("express-async-handler");
+const {
+  setSuccessMessage,
+  setErrorMessage,
+  getSuccessMessage,
+  getErrorMessage,
+} = require("../utils/resLocalsUtil");
 const userFullName = require("../utils/UserFullNameUtil");
 
 exports.getAllCases = asyncHandler(async (req, res, next) => {
@@ -13,13 +19,15 @@ exports.getAllCases = asyncHandler(async (req, res, next) => {
           fullname: userFullName(),
         },
       });
-    res.status(200).json(cases);
+    setSuccessMessage(res, "Fetched all cases successfully.");
+    res.status(200).json({ cases, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
 
-exports.getCasebyId = asyncHandler(async (req, res, next) => {
+exports.getCaseById = asyncHandler(async (req, res, next) => {
   try {
     const caseItem = await Case.findById(req.params.id)
       .populate("hearings")
@@ -30,10 +38,15 @@ exports.getCasebyId = asyncHandler(async (req, res, next) => {
           fullname: userFullName(),
         },
       });
-    if (!caseItem) return res.status(404).json({ message: "Case not found" });
-    res.status(200).json(caseItem);
+    if (!caseItem) {
+      setErrorMessage(res, "Case not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
+    setSuccessMessage(res, "Case retrieved successfully.");
+    res.status(200).json({ caseItem, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
 
@@ -53,17 +66,21 @@ exports.createCase = asyncHandler(async (req, res, next) => {
 
   try {
     const newCase = await caseItem.save();
-
-    res.status(201).json(newCase);
+    setSuccessMessage(res, "Case created successfully.");
+    res.status(201).json({ newCase, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    setErrorMessage(res, "Failed to create case.");
+    res.status(400).json({ message: getErrorMessage(res) });
   }
 });
 
 exports.updateCaseById = asyncHandler(async (req, res, next) => {
   try {
     const caseItem = await Case.findById(req.params.id);
-    if (!caseItem) return res.status(404).json({ message: "Case not found" });
+    if (!caseItem) {
+      setErrorMessage(res, "Case not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
 
     // Update fields
     caseItem.fileNumber = req.body.fileNumber || caseItem.fileNumber;
@@ -77,29 +94,38 @@ exports.updateCaseById = asyncHandler(async (req, res, next) => {
     caseItem.clientName = req.body.clientName || caseItem.clientName;
 
     const updatedCase = await caseItem.save();
-    res.status(200).json(updatedCase);
+    setSuccessMessage(res, "Case updated successfully.");
+    res.status(200).json({ updatedCase, message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(400).json({ message: getErrorMessage(res) });
   }
 });
 
 exports.deleteAllCases = asyncHandler(async (req, res, next) => {
   try {
     await Case.deleteMany();
-    res.status(200).json({ message: "All cases deleted successfully" });
+    setSuccessMessage(res, "All cases deleted successfully.");
+    res.status(200).json({ message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
 
 exports.deleteCaseById = asyncHandler(async (req, res, next) => {
   try {
     const caseItem = await Case.findById(req.params.id);
-    if (!caseItem) return res.status(404).json({ message: "Case not found" });
+    if (!caseItem) {
+      setErrorMessage(res, "Case not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
 
     await caseItem.deleteOne();
-    res.status(200).json({ message: "Case deleted successfully" });
+    setSuccessMessage(res, "Case deleted successfully.");
+    res.status(200).json({ message: getSuccessMessage(res) });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    setErrorMessage(res, err.message);
+    res.status(500).json({ message: getErrorMessage(res) });
   }
 });
