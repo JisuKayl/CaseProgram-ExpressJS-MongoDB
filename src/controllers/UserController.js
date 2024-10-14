@@ -12,6 +12,7 @@ const {
   getSuccessMessage,
   getErrorMessage,
 } = require("../utils/resLocalsUtil");
+const { infoLogger, errorLogger } = require("../config/logger");
 
 exports.accessToken = asyncHandler(async (req, res, next) => {
   try {
@@ -44,27 +45,33 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
       setErrorMessage(res, "User not found.");
       return res.status(404).json({ message: getErrorMessage(res) });
     }
+    const userFullName = `${user.firstName} ${user.lastName}`;
 
     const accessToken = jwt.sign(
       {
         id: user._id,
         email: user.email,
         userRole: user.userRole,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    const userFullName = `${user.firstName} ${user.lastName}`;
-    setSuccessMessage(
-      res,
-      `${userFullName} successfully refreshed the access token.`
-    );
+    infoLogger.info({
+      message: `${userFullName} (${user.userRole}) successfully refreshed the access token.`,
+      name: `${userFullName}`,
+      role: `${user.userRole}`,
+    });
 
     res
       .header("Authorization", accessToken)
       .status(200)
-      .json({ accessToken, message: getSuccessMessage(res) });
+      .json({
+        accessToken,
+        message: `${userFullName} (${user.userRole}) successfully refreshed the access token.`,
+      });
   } catch (err) {
     setErrorMessage(res, err.message);
     return res.status(400).json({ message: getErrorMessage(res) });
@@ -92,11 +99,16 @@ exports.signup = asyncHandler(async (req, res, next) => {
     const newUser = await userItem.save();
 
     const userFullName = `${newUser.firstName} ${newUser.lastName}`;
-    setSuccessMessage(
-      res,
-      `${userFullName} successfully registered as ${newUser.userRole}`
-    );
-    res.status(201).json({ newUser, message: getSuccessMessage(res) });
+
+    infoLogger.info({
+      message: `${userFullName} successfully registered as ${newUser.userRole}`,
+      name: `${userFullName}`,
+      role: `${newUser.userRole}`,
+    });
+    res.status(201).json({
+      newUser,
+      message: `${userFullName} successfully registered as ${newUser.userRole}`,
+    });
   } catch (err) {
     setErrorMessage(res, "Failed to sign up an account");
     res.status(400).json({ message: getErrorMessage(res) });
@@ -136,15 +148,19 @@ exports.login = asyncHandler(async (req, res, next) => {
         id: userExist._id,
         email: userExist.email,
         userRole: userExist.userRole,
+        firstName: userExist.firstName,
+        lastName: userExist.lastName,
       },
       JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    setSuccessMessage(
-      res,
-      `${userExist.firstName} ${userExist.lastName} successfully logged in as ${userExist.userRole}`
-    );
+    const userFullName = `${userExist.firstName} ${userExist.lastName}`;
+    infoLogger.info({
+      message: `${userFullName} successfully logged in as ${userExist.userRole}`,
+      name: `${userFullName}`,
+      role: `${userExist.userRole}`,
+    });
     return res
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -153,7 +169,11 @@ exports.login = asyncHandler(async (req, res, next) => {
       })
       .header("Authorization", accessToken)
       .status(200)
-      .json({ userExist, accessToken, message: getSuccessMessage(res) });
+      .json({
+        userExist,
+        accessToken,
+        message: `${userFullName} successfully logged in as ${userExist.userRole}`,
+      });
   } catch (err) {
     setErrorMessage(res, "An error occurred during login");
     return res.status(500).json({ message: getErrorMessage(res) });
@@ -180,12 +200,14 @@ exports.logout = asyncHandler(async (req, res) => {
 
     res.setHeader("Set-Cookie", serializedJWT);
     res.clearCookie("refreshToken");
-
-    setSuccessMessage(
-      res,
-      `${userFullName} (${userRole}) successfully logged out`
-    );
-    return res.status(200).json({ message: getSuccessMessage(res) });
+    infoLogger.info({
+      message: `${userFullName} (${userRole}) successfully logged out`,
+      name: `${userFullName}`,
+      role: `${userRole}`,
+    });
+    return res.status(200).json({
+      message: `${userFullName} (${userRole}) successfully logged out`,
+    });
   } catch (err) {
     setErrorMessage(res, "Invalid token or other error occurred.");
     return res.status(400).json({ message: getErrorMessage(res) });

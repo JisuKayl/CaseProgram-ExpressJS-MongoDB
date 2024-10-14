@@ -8,9 +8,7 @@ const infoLogger = winston.createLogger({
     new winston.transports.MongoDB({
       level: "info",
       db: db,
-      collection: "infoLogs",
-      //   format: format.combine(format.timestamp(), format.json()),
-      //   maxSize: 10,
+      collection: "activityLogs",
     }),
   ],
 });
@@ -20,9 +18,7 @@ const errorLogger = winston.createLogger({
     new winston.transports.MongoDB({
       level: "error",
       db: db,
-      collection: "errorLogs",
-      //   format: format.combine(format.timestamp(), format.json()),
-      //   maxSize: 10,
+      collection: "activityLogs",
     }),
   ],
 });

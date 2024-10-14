@@ -6,7 +6,7 @@ const {
 
 const loggerMiddleware = (req, res, next) => {
   try {
-    const skipRoutes = [];
+    const skipRoutes = ["/login", "/logout", "/signup", "/refreshToken"];
 
     if (skipRoutes.includes(req.path)) {
       return next();
@@ -25,19 +25,26 @@ const loggerMiddleware = (req, res, next) => {
         error: getErrorMessage(res),
       };
 
-      // Check if user information is available
-      if (req.fullName && req.userRole) {
+      const name = req.fullName;
+      const role = req.userRole;
+
+      // Logger with user fullname & role (applicable to routes with authenticate middleware)
+      if (name && role) {
         if (res.statusCode >= 200 && res.statusCode < 400) {
-          infoLogger.info(
-            `User: ${req.fullName}, Role: ${req.userRole} - Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.success}`
-          );
+          infoLogger.info({
+            message: `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.success}`,
+            name,
+            role,
+          });
         } else {
-          errorLogger.error(
-            `User: ${req.fullName}, Role: ${req.userRole} - Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.error}`
-          );
+          errorLogger.error({
+            message: `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.error}`,
+            name,
+            role,
+          });
         }
       } else {
-        // Log without user information
+        // Logger without user fullname & role
         if (res.statusCode >= 200 && res.statusCode < 400) {
           infoLogger.info(
             `Request: ${logDetails.method} ${logDetails.url} - Response Status: ${logDetails.status} message: ${logDetails.success}`
