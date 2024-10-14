@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDcyYjgwZjUwODAyYzEyMTFjMzM4ZiIsImVtYWlsIjoiamVyc29uQGdtYWlsLmNvbSIsInVzZXJSb2xlIjoiQWRtaW4iLCJpYXQiOjE3Mjg1NDIyMzMsImV4cCI6MTcyODU0NTgzM30.6778pQnAbHB1TojFGTCrCbm-E7pu2bIIOhtbygpRp9E",
 									"type": "string"
 								}
 							]
@@ -236,50 +236,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var template = `\r",
-									"<style type=\"text/css\">\r",
-									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
-									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
-									"    .tftable tr {background-color:#ffffff;}\r",
-									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
-									"    .tftable tr:hover {background-color:#e0ffff;}\r",
-									"</style>\r",
-									"\r",
-									"<table class=\"tftable\" border=\"1\">\r",
-									"    <tr>\r",
-									"        <th>User Exist</th>\r",
-									"        <th>First Name</th>\r",
-									"        <th>Last Name</th>\r",
-									"        <th>Age</th>\r",
-									"        <th>Contact Number</th>\r",
-									"        <th>Username</th>\r",
-									"        <th>Email</th>\r",
-									"        <th>Password</th>\r",
-									"        <th>User Role</th>\r",
-									"        <th>Created At</th>\r",
-									"        <th>Updated At</th>\r",
-									"    </tr>\r",
-									"    <tr>\r",
-									"        <td>{{response.userExist._id}}</td>\r",
-									"        <td>{{response.userExist.firstName}}</td>\r",
-									"        <td>{{response.userExist.lastName}}</td>\r",
-									"        <td>{{response.userExist.age}}</td>\r",
-									"        <td>{{response.userExist.contactNum}}</td>\r",
-									"        <td>{{response.userExist.username}}</td>\r",
-									"        <td>{{response.userExist.email}}</td>\r",
-									"        <td>{{response.userExist.password}}</td>\r",
-									"        <td>{{response.userExist.userRole}}</td>\r",
-									"        <td>{{response.userExist.createdAt}}</td>\r",
-									"        <td>{{response.userExist.updatedAt}}</td>\r",
-									"    </tr>\r",
-									"</table>\r",
-									"`;\r",
-									"\r",
-									"function constructVisualizerPayload() {\r",
-									"    return { response: pm.response.json() }\r",
-									"}\r",
-									"\r",
-									"pm.visualizer.set(template, constructVisualizerPayload());"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -312,7 +269,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// //Role: ADMIN\r\n{\r\n    \"email\": \"jerson@gmail.com\",\r\n    \"password\": \"jk123\"\r\n}\r\n\r\n// Role: USER\r\n// {\r\n//     \"email\": \"juan@gmail.com\",\r\n//     \"password\": \"juan123\"\r\n// }",
+							"raw": "// //Role: ADMIN\r\n// {\r\n//     \"email\": \"jerson@gmail.com\",\r\n//     \"password\": \"jk123\"\r\n// }\r\n\r\n{\r\n        \"email\": \"kyle@gmail.com\",\r\n    \"password\": \"k123\"\r\n}\r\n\r\n// Role: USER\r\n// {\r\n//     \"email\": \"juan@gmail.com\",\r\n//     \"password\": \"juan123\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -335,6 +292,16 @@
 				{
 					"name": "localhost:3000/logout",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDcyN2FjYjMzYjAyZWJmYzQ4ODczNCIsImVtYWlsIjoiamVyc29uQGdtYWlsLmNvbSIsInVzZXJSb2xlIjoiQWRtaW4iLCJpYXQiOjE3Mjg1MjIzMDUsImV4cCI6MTcyODUyNTkwNX0.fQJoGWYootQD9irLD8Rmny7MTw8llq7uD7IAitD4LNY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"url": {
@@ -635,7 +602,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fileNumber\": \"035-01-CA3\",\r\n    \"caseTitle\": \"Complainant vs Respondent3\",\r\n    \"caseNumber\": 15,\r\n    \"caseStatus\": \"ACTIVE\",\r\n    \"kindOfCase\": \"Civil1\",\r\n    \"courtCase\": \"Court of Appeals3\",\r\n    \"engagedDate\": \"{{currentDate}}\",\r\n    \"location\": \"PAMPANGA\",\r\n    \"clientName\": \"Sample Name\",\r\n    \"hearings\" : [\"66e78bf0ff24cf5dca9b6823\", \"66e79003924d1dae8dada152\"]\r\n}\r\n",
+							"raw": "{\r\n    \"fileNumber\": \"035-01-CA3\",\r\n    \"caseTitle\": \"Complainant vs Respondent3\",\r\n    \"caseNumber\": 15,\r\n    \"caseStatus\": \"ACTIVE\",\r\n    \"kindOfCase\": \"Civil1\",\r\n    \"courtCase\": \"Court of Appeals3\",\r\n    \"engagedDate\": \"{{currentDate}}\",\r\n    \"location\": \"PAMPANGA\",\r\n    \"clientName\": \"66e7e3d09b5e58dd9ef2693c\",\r\n    \"hearings\" : [\"66e78bf0ff24cf5dca9b6823\", \"66e79003924d1dae8dada152\"]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1107,6 +1074,39 @@
 									"key": "id2",
 									"value": ""
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "activityLogs",
+			"item": [
+				{
+					"name": "localhost:3000/activityLogs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDcyYjgwZjUwODAyYzEyMTFjMzM4ZiIsImVtYWlsIjoiamVyc29uQGdtYWlsLmNvbSIsInVzZXJSb2xlIjoiQWRtaW4iLCJmaXJzdE5hbWUiOiJKZXJzb24gS3lsZSIsImxhc3ROYW1lIjoiQm9uaWZhY2lvIiwiaWF0IjoxNzI4ODg2NTE4LCJleHAiOjE3Mjg4OTAxMTh9.9-8BJcVeVS8VhrTzgyyiIhfy0POZTWOwZykSGRqEjbU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/activityLogs",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"activityLogs"
 							]
 						}
 					},
