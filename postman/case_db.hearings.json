@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$oid": "670dcd5306ad6429aeddba24"
+  },
+  "hearingName": "Hearing 1",
+  "hearingDate": {
+    "$date": "2024-10-15T02:02:59.821Z"
+  },
+  "hearingNumber": 1,
+  "caseId": {
+    "$oid": "670dcad406ad6429aeddb9f0"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670dcd6c06ad6429aeddba2e"
+  },
+  "hearingName": "Hearing 2",
+  "hearingDate": {
+    "$date": "2024-10-15T02:03:24.824Z"
+  },
+  "hearingNumber": 2,
+  "caseId": {
+    "$oid": "670dccf606ad6429aeddba1b"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670dcdba06ad6429aeddba48"
+  },
+  "hearingName": "Hearing 3",
+  "hearingDate": {
+    "$date": "2024-10-15T02:04:42.537Z"
+  },
+  "hearingNumber": 3,
+  "caseId": {
+    "$oid": "670dcd9906ad6429aeddba3d"
+  },
+  "__v": 0
+}]

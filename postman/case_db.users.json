@@ -1,0 +1,51 @@
+[{
+  "_id": {
+    "$oid": "670dcad406ad6429aeddb9f0"
+  },
+  "firstName": "Kyle",
+  "lastName": "Flores",
+  "age": 20,
+  "contactNum": 9123456787,
+  "username": "Kyle",
+  "email": "kyle@gmail.com",
+  "password": "$2b$10$AVl2j.mKn8wxy5OQk1g0wuJqE6PWcQgAtMduw1WpS8F1i1RQzIrZK",
+  "userRole": "Admin",
+  "createdAt": {
+    "$date": "2024-10-15T01:52:20.451Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670dcbd406ad6429aeddb9f4"
+  },
+  "firstName": "Jerson Kyle",
+  "lastName": "Bonifacio",
+  "age": 21,
+  "contactNum": 9123456788,
+  "username": "Jerson",
+  "email": "jerson@gmail.com",
+  "password": "$2b$10$0bh05gMfwsBAJjh/gYUamuI4B7/zI4BBggezHchwYHM9ZhL1oNy1e",
+  "userRole": "Admin",
+  "createdAt": {
+    "$date": "2024-10-15T01:56:36.689Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670dcc1e06ad6429aeddb9fc"
+  },
+  "firstName": "Juan",
+  "lastName": "Dela Cruz",
+  "age": 25,
+  "contactNum": 9123456789,
+  "username": "Juan",
+  "email": "juan@gmail.com",
+  "password": "$2b$10$I2uIUK/oaXFsqH4mhvleIOPbQLlOplDPwRqTptrJhUwvv3Mvre9Ra",
+  "userRole": "User",
+  "createdAt": {
+    "$date": "2024-10-15T01:57:50.943Z"
+  },
+  "__v": 0
+}]

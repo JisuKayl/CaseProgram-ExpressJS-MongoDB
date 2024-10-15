@@ -1,0 +1,67 @@
+[{
+  "_id": {
+    "$oid": "670dcc6d06ad6429aeddba11"
+  },
+  "fileNumber": "035-01-CA1",
+  "caseTitle": "Complainant vs Respondent1",
+  "caseNumber": 1,
+  "caseStatus": "RESOLVED",
+  "kindOfCase": "Civil1",
+  "courtCase": "Court of Appeals1",
+  "engagedDate": {
+    "$date": "2024-10-15T01:59:09.904Z"
+  },
+  "location": "PAMPANGA",
+  "clientName": {
+    "$oid": "670dcbd406ad6429aeddb9f4"
+  },
+  "hearings": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670dccf606ad6429aeddba1b"
+  },
+  "fileNumber": "035-01-CA2",
+  "caseTitle": "Complainant vs Respondent2",
+  "caseNumber": 2,
+  "caseStatus": "ACTIVE",
+  "kindOfCase": "Civil2",
+  "courtCase": "Court of Appeals2",
+  "engagedDate": {
+    "$date": "2024-10-15T02:01:26.757Z"
+  },
+  "location": "MALOLOS",
+  "clientName": {
+    "$oid": "670dcc1e06ad6429aeddb9fc"
+  },
+  "hearings": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "670dcd9906ad6429aeddba3d"
+  },
+  "fileNumber": "035-01-CA3",
+  "caseTitle": "Complainant vs Respondent3",
+  "caseNumber": 3,
+  "caseStatus": "TERMINATED",
+  "kindOfCase": "Civil3",
+  "courtCase": "Court of Appeals3",
+  "engagedDate": {
+    "$date": "2024-10-15T02:04:09.545Z"
+  },
+  "location": "PULILAN",
+  "clientName": {
+    "$oid": "670dcad406ad6429aeddb9f0"
+  },
+  "hearings": [
+    {
+      "$oid": "670dcd5306ad6429aeddba24"
+    },
+    {
+      "$oid": "670dcd6c06ad6429aeddba2e"
+    }
+  ],
+  "__v": 0
+}]
