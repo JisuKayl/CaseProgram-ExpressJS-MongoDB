@@ -6,7 +6,13 @@ const {
 
 const loggerMiddleware = (req, res, next) => {
   try {
-    const skipRoutes = ["/login", "/logout", "/signup", "/refreshToken"];
+    const skipRoutes = [
+      "/login",
+      "/logout",
+      "/signup",
+      "/refreshToken",
+      "/activityLogs",
+    ];
 
     if (skipRoutes.includes(req.path)) {
       return next();

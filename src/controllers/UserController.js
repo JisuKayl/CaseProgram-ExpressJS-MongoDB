@@ -50,10 +50,6 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
     const accessToken = jwt.sign(
       {
         id: user._id,
-        email: user.email,
-        userRole: user.userRole,
-        firstName: user.firstName,
-        lastName: user.lastName,
       },
       JWT_SECRET,
       { expiresIn: "1h" }
@@ -134,10 +130,6 @@ exports.login = asyncHandler(async (req, res, next) => {
     const accessToken = jwt.sign(
       {
         id: userExist._id,
-        email: userExist.email,
-        userRole: userExist.userRole,
-        firstName: userExist.firstName,
-        lastName: userExist.lastName,
       },
       JWT_SECRET,
       { expiresIn: "1h" }
@@ -146,10 +138,6 @@ exports.login = asyncHandler(async (req, res, next) => {
     const refreshToken = jwt.sign(
       {
         id: userExist._id,
-        email: userExist.email,
-        userRole: userExist.userRole,
-        firstName: userExist.firstName,
-        lastName: userExist.lastName,
       },
       JWT_SECRET,
       { expiresIn: "1d" }
@@ -185,8 +173,13 @@ exports.logout = asyncHandler(async (req, res) => {
 
   try {
     const decodedToken = jwt.verify(accessToken, JWT_SECRET);
-    const userFullName = `${decodedToken.firstName} ${decodedToken.lastName}`;
-    const userRole = decodedToken.userRole;
+    const userId = decodedToken.id;
+
+    const user = await User.findById(userId);
+    const userFullName = user
+      ? `${user.firstName} ${user.lastName}`
+      : "Unknown User";
+    const userRole = user ? user.userRole : "Unknown Role";
 
     const blacklistItem = new Blacklist({ token: accessToken });
     await blacklistItem.save();
@@ -200,13 +193,15 @@ exports.logout = asyncHandler(async (req, res) => {
 
     res.setHeader("Set-Cookie", serializedJWT);
     res.clearCookie("refreshToken");
+
     infoLogger.info({
       message: `${userFullName} (${userRole}) successfully logged out`,
       name: `${userFullName}`,
       role: `${userRole}`,
     });
+
     return res.status(200).json({
-      message: `${userFullName} (${userRole}) successfully logged out`,
+      message: `User successfully logged out.`,
     });
   } catch (err) {
     setErrorMessage(res, "Invalid token or other error occurred.");

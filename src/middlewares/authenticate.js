@@ -2,6 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 const Blacklist = require("../models/BlacklistModel");
+const User = require("../models/UserModel");
 const { setErrorMessage, getErrorMessage } = require("../utils/resLocalsUtil");
 
 const authenticate = async (req, res, next) => {
@@ -27,9 +28,17 @@ const authenticate = async (req, res, next) => {
     const decoded = await jwt.verify(accessToken, JWT_SECRET);
     req.accessToken = accessToken;
     req.id = decoded.id;
-    req.email = decoded.email;
-    req.userRole = decoded.userRole;
-    req.fullName = `${decoded.firstName} ${decoded.lastName}`;
+
+    const user = await User.findById(req.id).select(
+      "firstName lastName userRole"
+    );
+    if (!user) {
+      setErrorMessage(res, "User not found.");
+      return res.status(404).json({ message: getErrorMessage(res) });
+    }
+
+    req.fullName = `${user.firstName} ${user.lastName}`;
+    req.userRole = user.userRole;
 
     next();
   } catch (error) {
